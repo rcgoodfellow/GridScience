@@ -14,8 +14,8 @@ include_directories(
 )
 
 link_directories(
-  /opt/intel/mkl/lib/intel64
-  /opt/intel/lib/intel64
+  /opt/intel/mkl/lib
+  /opt/intel/lib
 ) 
 
 set(MKL_LIBS mkl_intel_ilp64 mkl_core mkl_intel_thread iomp5)

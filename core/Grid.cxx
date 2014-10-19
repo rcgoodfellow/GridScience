@@ -100,6 +100,7 @@ SMatrix<complex> gridworks::ymatrix(Grid &g) {
     {
       Neighbor n = b.neighbors[j-1]; 
       m.c[off+j] = n.b->id;
+      std::cout << i << " " << n.b->id << std::endl;
       switch(n.br->kind)
       {
         case Branch::Kind::Line:

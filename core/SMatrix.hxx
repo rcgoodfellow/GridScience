@@ -25,7 +25,7 @@ namespace gridworks
     {
       v = aalloc<T>(s);
       c = aalloc<MKL_INT>(s);
-      r = aalloc<MKL_INT>(n);
+      r = aalloc<MKL_INT>(n+1);
 
       memset(v, 0, sizeof(T)*s);
       for(int i=0; i<s; ++i) { c[i] = -1; }

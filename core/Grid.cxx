@@ -1,11 +1,26 @@
 #include "Grid.hxx"
 
 using namespace gridworks;
+
+std::string 
+JacobiStructureInfo::toString() {
+    std::stringstream ss;
+    ss
+      << "n: (" << n[0] << "," << n[1] << ")" << std::endl
+      << "s: (" << s[0] << "," << s[1] << "," << s[2] << "," << s[3] << ")" 
+                << std::endl
+      << "N: " << N() << std::endl
+      << "S: " << S();
+
+    return ss.str();
+}
   
+int JacobiStructureInfo::N() { return n[0] + n[1]; }
+int JacobiStructureInfo::S() { return s[0] + s[1] + s[2] + s[3]; }
   
 Neighbor::Neighbor(Branch *br , Bus *b) : br{br}, b{b} {}
   
-Bus::Bus(size_t id, double rating, complex shunt_y) 
+Bus::Bus(int id, double rating, complex shunt_y) 
   : id{id}, rating{rating}, shunt_y{shunt_y} {}
 
 Branch::Branch(Kind kind) : kind{kind} {}
@@ -33,7 +48,7 @@ complex SimpleTransformer::z() const { return _z; }
 complex SimpleTransformer::tr() { return _tr; }
   
 StaticGen::StaticGen(complex v) : _v{v} {}
-complex StaticGen::v(double) { return _v; }
+complex StaticGen::v(double) const { return _v; }
 
 Glob<complex> Grid::sCalc(Glob<complex> x, SMatrix<complex> Y)
 {
@@ -74,6 +89,15 @@ Glob<complex> Grid::sCalc(Glob<complex> x, SMatrix<complex> Y)
 
 }
 
+Glob<complex> Grid::flatStart() {
+  Glob<complex> x(buses.size());
+  for(size_t i=0; i<buses.size(); ++i){ x.data[i] = std::polar(1.0, 0.0); }
+  for(const Generator *g : generators) {
+    x.data[g->bus_id] = std::polar(std::abs(g->v(0)), std::arg(g->v(0))); 
+  }
+  return x;
+}
+
 SMatrix<complex> gridworks::ymatrix(Grid &g) {
 
   SMatrix<complex> m(g.buses.size(), 
@@ -100,7 +124,6 @@ SMatrix<complex> gridworks::ymatrix(Grid &g) {
     {
       Neighbor n = b.neighbors[j-1]; 
       m.c[off+j] = n.b->id;
-      std::cout << i << " " << n.b->id << std::endl;
       switch(n.br->kind)
       {
         case Branch::Kind::Line:

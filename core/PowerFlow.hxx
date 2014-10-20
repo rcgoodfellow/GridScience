@@ -5,6 +5,8 @@
 #include <mkl_dss.h>
 #include <mkl_types.h>
 #include <cassert>
+#include <string>
+#include <sstream>
 
 namespace gridworks {
 
@@ -47,6 +49,7 @@ namespace gridworks {
     double max_dX();
     double max_dS();
     void run();
+    std::string result_summary();
 
   };
 

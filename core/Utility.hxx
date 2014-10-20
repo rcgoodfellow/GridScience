@@ -18,9 +18,10 @@ template <class T>
 struct Glob
 {
   T* data{nullptr};
+  size_t sz;
 
   Glob() = default;
-  explicit Glob(size_t sz)
+  explicit Glob(size_t sz) : sz{sz}
   {
     data = aalloc<T>(sz);
   }

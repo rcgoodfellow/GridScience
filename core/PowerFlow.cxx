@@ -1,6 +1,9 @@
 #include "PowerFlow.hxx"
 
 using namespace gridworks;
+using std::string;
+using std::stringstream;
+using std::endl;
 
 PowerFlow::PowerFlow(Grid *g, Glob<complex> state, Glob<complex> sSch,
     double thresh)
@@ -153,4 +156,24 @@ void PowerFlow::run()
   {
     step();
   }
+}
+    
+string 
+PowerFlow::result_summary()
+{
+  stringstream ss;
+  ss << "Powerflow converged in " << steps << " steps" << endl;
+  ss << "Max mismatch " << max_dS() << endl;
+
+  ss << "result:" << endl;
+  for(size_t i=0; i<G->buses.size(); ++i)
+  {
+    ss << "[" << i << "] : "
+       << "(" << std::abs(state.data[i])
+       << "," << deg(std::arg(state.data[i])) << ")  "
+       << sCalc.data[i] * 100.0
+       << endl;
+  }
+  
+  return ss.str();
 }

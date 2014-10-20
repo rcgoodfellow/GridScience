@@ -15,6 +15,7 @@ using std::endl;
 Grid grid;
 Network network;
 
+//-----------------------------------------------------------------------------
 void init_buses()
 {
   
@@ -201,15 +202,15 @@ int main() {
   init_buses();
   init_lines();
   init_transformers();
-  show_bus_topo();
+  //show_bus_topo();
 
-  init_ip();
-  std::ofstream ofs("ieee14.topdl");
-  ofs << network.topDL();
+  //init_ip();
+  //std::ofstream ofs("ieee14.topdl");
+  //ofs << network.topDL();
 
 
   SMatrix<complex> Y = ymatrix(grid);
-  cout << Y.toCsv() << endl;
+  //cout << Y.toCsv() << endl;
 
   Glob<complex> x(14);
   for(int i=0; i<14; ++i) { x.data[i] = std::polar(1.0,0.0); }
@@ -241,7 +242,7 @@ int main() {
 
   for(size_t i=0; i<14; ++i) sSch.data[i] /= 100.0;
 
-  cout << J.m->toCsv() << endl;
+  //cout << J.m->toCsv() << endl;
 
   PowerFlow pf{&grid, x, sSch, 5e-6};
   pf.run();
